@@ -83,13 +83,14 @@ if __name__ == '__main__':
     headers = {
         '#PLAYER': '1',
         '#RANK': '3',
+        '#DIFFICULTY': '4',
         '#STAGEFILE': '',
         '#GENRE': b.execute_script('return genre'),
         '#TITLE': b.execute_script('return title'),
         '#ARTIST': b.execute_script('return artist'),
         '#BPM': b.execute_script('return bpm'),
         '#PLAYLEVEL': '12',
-        '#WAV02': 'out.ogg',
+        '#WAV02': 'out.wav',
     }
     print('*---------------------- HEADER FIELD')
     for k, v in headers.items():
