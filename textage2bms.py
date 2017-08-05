@@ -45,7 +45,11 @@ def get_channels(table):
             print(style, file=stderr)  # BPM change?
             continue
         pos, channel = top_to_pos(t_height, top), CSS_LEFT_TO_CHANNEL[left]
-        channels[channel][pos] = True
+        try:
+            channels[channel][pos] = True
+        except Exception as e:
+            print(channel, pos, style, file=stderr)  # Unsupported?
+            continue
     compressed_channels = {}
     for channel, notes in channels.items():
         compressed_channels[channel] = compress_notes(notes)
