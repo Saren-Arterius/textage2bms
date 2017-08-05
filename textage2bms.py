@@ -54,11 +54,15 @@ def get_channels(table):
             elif pos < 0:
                 pos = 0
             channels[channel][pos] = True
-    compressed_channels = {}
-    for channel, notes in channels.items():
-        compressed_channels[channel] = compress_notes(notes)
 
     measure = t_height / 128
+
+    if measure == 1:
+        compressed_channels = {}
+        for channel, notes in channels.items():
+            compressed_channels[channel] = compress_notes(notes)
+    else:
+        compressed_channels = channels
     if measure != 1 and measure != 1 / 16:  # End trim
         compressed_channels['02'] = measure
     return compressed_channels
