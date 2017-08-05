@@ -49,7 +49,11 @@ def get_channels(table):
             channels[channel][pos] = True
         except Exception as e:
             print(channel, pos, style, file=stderr)  # Unsupported?
-            continue
+            if pos > t_height - 1:
+                pos = t_height - 1
+            elif pos < 0:
+                pos = 0
+            channels[channel][pos] = True
     compressed_channels = {}
     for channel, notes in channels.items():
         compressed_channels[channel] = compress_notes(notes)
