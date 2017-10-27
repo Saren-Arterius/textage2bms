@@ -45,8 +45,12 @@ def get_channels(table):
             if LN_DISABLE:
                 print('Ignoring LN', file=stderr)
                 continue
-            top, left, height = tuple(map(lambda s: s.split(
-                ':')[1].strip(), style.split(';')[:3]))
+            try:
+                top, left, height = tuple(map(lambda s: s.split(
+                    ':')[1].strip(), style.split(';')[:3]))
+            except:
+                print('Padding?', pq(note), file=stderr)
+                continue
             t_i, l_i, h_i = map(lambda s: int(
                 s.replace('px', '')), [top, left, height])
             pos, channel = top_to_pos(
