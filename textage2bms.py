@@ -53,8 +53,9 @@ def get_channels(table):
                 continue
             t_i, l_i, h_i = map(lambda s: int(
                 s.replace('px', '')), [top, left, height])
-            pos, channel = top_to_pos(
-                t_height, str((t_i + h_i) - 4)), str(int(CSS_LEFT_TO_CHANNEL[str(l_i - 1) + 'px']) + 40)
+            pos = top_to_pos(t_height, str((t_i + h_i) - 4))
+            key = str(l_i - 2 if l_i == 2 else l_i - 1) + 'px'
+            channel = str(int(CSS_LEFT_TO_CHANNEL[key]) + 40) # LN Channel
             if channel not in channels:
                 channels[channel] = [False] * t_height
             channels[channel][pos] = True
