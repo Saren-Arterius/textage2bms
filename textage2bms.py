@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium import webdriver
 from pyquery import PyQuery as pq
+from os.path import exists
 from sys import argv, stderr
 
 LN_DISABLE = False
@@ -131,9 +134,26 @@ def get_sections(doc):
             sections[d[1] - 1][1][d[0]][d[2]] = True
     return sections
 
+def get_driver():
+    for trial in [
+        ["c", "/usr/bin/chromium"],
+        ["c", "/usr/bin/chrome"],
+        ["c", None],
+        ["f", "/usr/bin/firefox"],
+        ["f", None]
+    ]:
+        try:
+            options = ChromeOptions() if trial[0] == "c" else FirefoxOptions() 
+            options.add_argument("--headless" if trial[0] == "c" else "-headless")
+            if trial[0] == "c":
+                options.binary_location = trial[1]
+            b = webdriver.Chrome(options=options) if trial[0] == "c" else webdriver.Firefox(firefox_binary=trial[1], options=options)
+            return b
+        except Exception as e:
+            print(e, file=stderr)
 
 if __name__ == '__main__':
-    b = webdriver.PhantomJS()
+    b = get_driver()
     b.get(argv[1])
     doc = pq(b.page_source)
     headers = {
