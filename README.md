@@ -53,3 +53,13 @@ Convert Taijo Jiro to BMS (3 5 as red, 2 6 as blue) for fun
 
 ### Usage
 `$ python3 tja2bms.py [TJA file] > tja.bms`
+
+# bms-merge
+Adding keysound to keysound-less BMS using existing keysounded BMS files
+
+### Usage
+`$ python3 bms-merge.py [Keysounded BMS] [Keysoundless BMS] [Optional=Keysoundless BMS section offset]`
+
+Example command: 
+1. `$ python3 textage2bms.py 'http://textage.cc/score/21/verflchl.html?1AC0' > verflucht-l7.bme`
+2. `$ python3 bms-merge.py verflucht-a7.bme verflucht-l7.bme 1 > verflucht-merged.bme`
