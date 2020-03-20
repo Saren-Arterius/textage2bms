@@ -59,7 +59,7 @@ def shorten(data):
 
 def retain_bms_headers(fp):
     lines = []
-    with open(fp) as bms:
+    with open(fp, encoding='shift-jis', errors='replace') as bms:
         for line in bms.readlines():
             line = line.strip()
             try:
@@ -73,7 +73,7 @@ def retain_bms_headers(fp):
 def read_bms(fp):
     sc_map = {}
     data_channels = 0
-    with open(fp) as bms:
+    with open(fp, encoding='shift-jis', errors='replace') as bms:
         for line in bms.readlines():
             line = line.strip()
             try:
@@ -138,6 +138,8 @@ if __name__ == '__main__':
         for s in range(len(chart)):
             if chart == ks_less:
                 s += section_offset
+            if s not in chart:
+                chart[s] = {}
             channel_map = chart[s]
             for c, data in channel_map.items():
                 chart[s][c] = shorten(data)
