@@ -5,6 +5,7 @@ import math
 
 PLAYABLE_CHANNELS = [16, 11, 12, 13, 14, 15,
                      18, 19, 56, 51, 52, 53, 54, 55, 58, 59]
+HIDDEN_DIFF = 20
 LN_DIFF = 40
 BGM_START = 60
 
@@ -196,11 +197,18 @@ if __name__ == '__main__':
                     channel_map[to_channel][t] = channel_map[from_channel][t]
                     channel_map[from_channel][t] = '00'
                     print(
-                        f't={t} Moved {from_channel} to {to_channel}', file=stderr)
+                        f't={t} Moved c={from_channel} to c={to_channel}', file=stderr)
                 else:
-                    channel_map[to_channel][t] = 'ZZ'
+                    # Lookback sound search
+                    sound = 'ZZ'
+                    for st in range(t, 0, -1):
+                        tmp_s = channel_map[to_channel + HIDDEN_DIFF][st]
+                        if tmp_s != '00':
+                            sound = tmp_s
+                            break
+                    channel_map[to_channel][t] = sound
                     print(
-                        f't={t} Added soundless note to {to_channel}', file=stderr)
+                        f't={t} Added sound={sound} to c={to_channel}', file=stderr)
     for s in range(len(keysound)):
         channel_map = keysound[s]
         intervals = len(channel_map[PLAYABLE_CHANNELS[0]])
