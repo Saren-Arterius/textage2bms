@@ -150,15 +150,21 @@ if __name__ == '__main__':
         denominator = 1
         if s + section_offset not in ks_less:
             ks_less[s + section_offset] = {}
-        for data in list(channel_map.values()) + list(ks_less[s + section_offset].values()):
-            interval = int(len(data) / 2)
-            denominator = lcm(interval, denominator)
+        note_channels = set(PLAYABLE_CHANNELS)
+        note_channels |= set(channel_map.keys())
+        note_channels |= set(ks_less[s + section_offset].keys())
+        note_channels -= set([2])
+        print(note_channels)
+        for c in note_channels:
+            for chart in [keysound, ks_less]:
+                sec = s + (section_offset if chart == ks_less else 0)
+                if c not in chart[sec] or not chart[sec][c]:
+                    chart[sec][c] = '00'
+                data = chart[sec][c]
+                interval = int(len(data) / 2)
+                denominator = lcm(interval, denominator)
         print(f'Common denominator for #{s}: {denominator}', file=stderr)
-        for c in set(PLAYABLE_CHANNELS) | set(keysound[s].keys()) | set(ks_less[s + section_offset].keys()):
-            if c == 2:
-                continue
-            if c not in keysound[s]:
-                keysound[s][c] = '00'
+        for c in note_channels:
             keysound[s][c] = to_objects_array(keysound[s][c], denominator)
             if c not in ks_less[s + section_offset]:
                 ks_less[s + section_offset][c] = '00'
