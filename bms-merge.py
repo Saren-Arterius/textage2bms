@@ -201,11 +201,12 @@ if __name__ == '__main__':
                 else:
                     # Lookback sound search
                     sound = 'ZZ'
-                    for st in range(t, 0, -1):
-                        tmp_s = channel_map[to_channel + HIDDEN_DIFF][st]
-                        if tmp_s != '00':
-                            sound = tmp_s
-                            break
+                    if to_channel + HIDDEN_DIFF in channel_map:
+                        for st in range(t, 0, -1):
+                            tmp_s = channel_map[to_channel + HIDDEN_DIFF][st]
+                            if tmp_s != '00':
+                                sound = tmp_s
+                                break
                     channel_map[to_channel][t] = sound
                     print(
                         f't={t} Added sound={sound} to c={to_channel}', file=stderr)
