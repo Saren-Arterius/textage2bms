@@ -148,11 +148,15 @@ if __name__ == '__main__':
     for s in range(len(keysound)):
         channel_map = keysound[s]
         denominator = 1
+        if s + section_offset not in ks_less:
+            ks_less[s + section_offset] = {}
         for data in list(channel_map.values()) + list(ks_less[s + section_offset].values()):
             interval = int(len(data) / 2)
             denominator = lcm(interval, denominator)
         print(f'Common denominator for #{s}: {denominator}', file=stderr)
         for c in set(PLAYABLE_CHANNELS) | set(keysound[s].keys()) | set(ks_less[s + section_offset].keys()):
+            if c == 2:
+                continue
             if c not in keysound[s]:
                 keysound[s][c] = '00'
             keysound[s][c] = to_objects_array(keysound[s][c], denominator)
@@ -190,8 +194,8 @@ if __name__ == '__main__':
                     # Nowhere to move, move note to autoplay instead
                     send_to_bgm(from_channel, t, channel_map)
             for to_channel in altering['add']:
-                candidates = list(filter(lambda ch: channel_map[ch][t] != '00', set(
-                    channel_map.keys()) - set(PLAYABLE_CHANNELS)))
+                # Look for a note from BGM
+                candidates = list(filter(lambda ch: ch >= BGM_START and channel_map[ch][t] != '00', channel_map.keys()))
                 from_channel = find_closest_channel(to_channel, candidates)
                 if from_channel:
                     channel_map[to_channel][t] = channel_map[from_channel][t]
