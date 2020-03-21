@@ -153,8 +153,7 @@ if __name__ == '__main__':
         note_channels = set(PLAYABLE_CHANNELS)
         note_channels |= set(channel_map.keys())
         note_channels |= set(ks_less[s + section_offset].keys())
-        note_channels -= set([2])
-        print(note_channels)
+        note_channels -= set([2])  # Some floating point channel?
         for c in note_channels:
             for chart in [keysound, ks_less]:
                 sec = s + (section_offset if chart == ks_less else 0)
@@ -201,7 +200,8 @@ if __name__ == '__main__':
                     send_to_bgm(from_channel, t, channel_map)
             for to_channel in altering['add']:
                 # Look for a note from BGM
-                candidates = list(filter(lambda ch: ch >= BGM_START and channel_map[ch][t] != '00', channel_map.keys()))
+                candidates = list(filter(
+                    lambda ch: ch >= BGM_START and channel_map[ch][t] != '00', channel_map.keys()))
                 from_channel = find_closest_channel(to_channel, candidates)
                 if from_channel:
                     channel_map[to_channel][t] = channel_map[from_channel][t]
@@ -246,7 +246,8 @@ if __name__ == '__main__':
                         if check_poses[1] != '00':
                             channel_map[c][intervals - 1] = check_poses[1]
                             ns_channel_map[c - LN_DIFF][0] = check_poses[3]
-                            print(f'BSS Fix s={s} c={c}', check_poses, file=stderr)
+                            print(f'BSS Fix s={s} c={c}',
+                                  check_poses, file=stderr)
                             channel_map[c - LN_DIFF][intervals - 1] = '00'
                             ns_channel_map[c][0] = '00'
                             no_touch.add((s, c, intervals - 1))
