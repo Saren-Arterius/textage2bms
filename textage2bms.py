@@ -59,10 +59,13 @@ def get_channels(table):
             pos = top_to_pos(t_height, str((t_i + h_i) - 4))
             key = str(l_i - 2 if l_i == 2 else l_i - 1) + 'px'
             channel = str(int(CSS_LEFT_TO_CHANNEL[key]) + 40) # LN Channel
+
             if channel not in channels:
                 channels[channel] = [False] * t_height
             channels[channel][pos] = True
             end_pos = pos + h_i
+            # print('LN', channel, pos, file=stderr)
+
             deferring_lns.append((channel, end_pos))
             continue
         try:
@@ -105,6 +108,7 @@ def get_sections(doc):
             section_num = int(table.find('th[bgcolor="gray"]').text())
         except:
             section_num = -1
+        # print('Section', section_num, file=stderr)
         channels, deferring_lns, t_height = get_channels(table)
         section_t_height[section_num] = t_height
         sections.append([section_num, channels])
@@ -119,19 +123,24 @@ def get_sections(doc):
             section[0] = new_section_num
             section_t_height[new_section_num] = section_t_height[-1]
     sections.sort(key=lambda s: s[0])
+    # print(sections, file=stderr)
     has_end = set()
+    # print(deferring_lns_merge, file=stderr)
     for d in deferring_lns_merge:
         if d[2] != 0:
             has_end.add((d[0], d[1],))
+    offset = sections[0][0] - 1
     for d in deferring_lns_merge:
-        channels = sections[d[1] - 1][1]
+        sec_num = d[1] - 1 - offset
+        channels = sections[sec_num][1]
         if d[0] not in channels:
             channels[d[0]] = [False] * section_t_height[section_num]
         if d[2] == 0 and (d[0], d[1],) in has_end:
             print('Will not append LN end at', d, file=stderr)
-            sections[d[1] - 1][1][d[0]][d[2]] = False
+            sections[sec_num][1][d[0]][d[2]] = False
         else:
-            sections[d[1] - 1][1][d[0]][d[2]] = True
+            sections[sec_num][1][d[0]][d[2]] = True
+        sections[sec_num][1][str(int(d[0]) - 40)][d[2]] = False
     return sections
 
 def get_driver():
