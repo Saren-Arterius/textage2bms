@@ -46,16 +46,17 @@ def to_objects_array(data, length=-1):
 
 
 def shorten(data):
-    a = to_objects_array(data, -1)
-    length = 0
-    for i, v in enumerate(a):
-        if v == '00':
-            continue
-        f = Fraction(i, len(a))
-        if f.denominator > length:
-            length = f.denominator
-    short = to_objects_array(data, length)
-    return ''.join(short)
+    return ''.join(data)
+    # a = to_objects_array(data, -1)
+    # length = 0
+    # for i, v in enumerate(a):
+    #     if v == '00':
+    #         continue
+    #     f = Fraction(i, len(a))
+    #     if f.denominator > length:
+    #         length = f.denominator
+    # short = to_objects_array(data, length)
+    # return ''.join(short)
 
 
 def retain_bms_headers(fp):

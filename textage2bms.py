@@ -21,7 +21,17 @@ CSS_LEFT_TO_CHANNEL = {
 
 
 def top_to_pos(t_height, top_px):
-    return abs(int(top_px.replace('px', '')) - t_height) - 5
+    pos = abs(int(top_px.replace('px', '')) - t_height) - 5
+    if pos == 10:
+        pos = 11
+    if pos == 42:
+        pos = 43
+    if pos == 74:
+        pos = 75
+    if pos == 106:
+        pos = 107
+    print(pos, file=stderr)
+    return pos
 
 
 def compress_notes(notes):
